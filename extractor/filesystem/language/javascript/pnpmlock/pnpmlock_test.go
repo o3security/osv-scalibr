@@ -288,6 +288,70 @@ func TestExtractor_Extract(t *testing.T) {
 			},
 		},
 		{
+			Name: "v9 keys under a v6 header keep their scope",
+			InputConfig: extracttest.ScanInputMockConfig{
+				Path: "testdata/v9-keys-v6-header.yaml",
+			},
+			WantPackages: []*extractor.Package{
+				{
+					Name:       "@rollup/rollup-linux-riscv64-gnu",
+					Version:    "4.53.5",
+					PURLType:   purl.TypeNPM,
+					Location:   extractor.LocationFromPathAndLine("testdata/v9-keys-v6-header.yaml", 5),
+					SourceCode: &extractor.SourceCodeIdentifier{},
+					Metadata: &osv.DepGroupMetadata{
+						DepGroupVals: []string{},
+					},
+				},
+				{
+					Name:       "acorn",
+					Version:    "8.7.0",
+					PURLType:   purl.TypeNPM,
+					Location:   extractor.LocationFromPathAndLine("testdata/v9-keys-v6-header.yaml", 10),
+					SourceCode: &extractor.SourceCodeIdentifier{},
+					Metadata: &osv.DepGroupMetadata{
+						DepGroupVals: []string{},
+					},
+				},
+			},
+		},
+		{
+			Name: "v6 keys under a v9 header keep their scope",
+			InputConfig: extracttest.ScanInputMockConfig{
+				Path: "testdata/v6-keys-v9-header.yaml",
+			},
+			WantPackages: []*extractor.Package{
+				{
+					Name:       "@rollup/rollup-linux-riscv64-gnu",
+					Version:    "4.53.5",
+					PURLType:   purl.TypeNPM,
+					Location:   extractor.LocationFromPathAndLine("testdata/v6-keys-v9-header.yaml", 5),
+					SourceCode: &extractor.SourceCodeIdentifier{},
+					Metadata: &osv.DepGroupMetadata{
+						DepGroupVals: []string{},
+					},
+				},
+			},
+		},
+		{
+			Name: "header with a suffix",
+			InputConfig: extracttest.ScanInputMockConfig{
+				Path: "testdata/inline-specifiers.v54.yaml",
+			},
+			WantPackages: []*extractor.Package{
+				{
+					Name:       "@typescript-eslint/types",
+					Version:    "5.57.1",
+					PURLType:   purl.TypeNPM,
+					Location:   extractor.LocationFromPathAndLine("testdata/inline-specifiers.v54.yaml", 12),
+					SourceCode: &extractor.SourceCodeIdentifier{},
+					Metadata: &osv.DepGroupMetadata{
+						DepGroupVals: []string{},
+					},
+				},
+			},
+		},
+		{
 			Name: "peer dependencies",
 			InputConfig: extracttest.ScanInputMockConfig{
 				Path: "testdata/peer-dependencies.yaml",

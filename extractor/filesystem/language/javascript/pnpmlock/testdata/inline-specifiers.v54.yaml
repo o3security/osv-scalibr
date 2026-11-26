@@ -1,0 +1,14 @@
+lockfileVersion: 5.4-inlineSpecifiers
+
+importers:
+  .:
+    dependencies:
+      '@typescript-eslint/types':
+        specifier: ^5.0.0
+        version: 5.57.1
+
+packages:
+
+  /@typescript-eslint/types/5.57.1:
+    resolution: {integrity: sha512-x}
+    dev: false

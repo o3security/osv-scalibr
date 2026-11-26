@@ -76,13 +76,8 @@ func (l *pnpmLockfile) UnmarshalYAML(unmarshal func(any) error) error {
 		return err
 	}
 
-	parsedVersion, err := strconv.ParseFloat(lockfileV6.Version, 64)
-
-	if err != nil {
-		return err
-	}
-
-	l.Version = parsedVersion
+	// "5.4-inlineSpecifiers" or a missing header must not fail the whole file.
+	l.Version, _ = strconv.ParseFloat(leadingNumberRegexp.FindString(lockfileV6.Version), 64)
 	l.Packages = lockfileV6.Packages
 
 	return nil
@@ -91,7 +86,10 @@ func (l *pnpmLockfile) UnmarshalYAML(unmarshal func(any) error) error {
 var (
 	numberMatcher = regexp.MustCompile(`^\d`)
 	// Looks for the pattern "name@version", where name is allowed to contain zero or more "@"
-	nameVersionRegexp = regexp.MustCompile(`^(.+)@([\w.-]+)(?:\(|$)`)
+	nameVersionRegexp   = regexp.MustCompile(`^(.+)@([\w.-]+)(?:\(|$)`)
+	leadingNumberRegexp = regexp.MustCompile(`^\d+(\.\d+)?`)
+	// A v9-style key: "name@version" or "@scope/name@version", with no leading "/"
+	v9KeyRegexp = regexp.MustCompile(`^(@[^/@]+/)?[^/@]+@`)
 
 	codeLoadURLRegexp = regexp.MustCompile(`https://codeload\.github\.com(?:/[\w-.]+){2}/tar\.gz/(\w+)$`)
 )
@@ -106,8 +104,11 @@ func extractPnpmPackageNameAndVersion(dependencyPath string, lockfileVersion flo
 		return "", "", nil
 	}
 
-	// v9.0 specifies the dependencies as <package>@<version> rather than as a path
-	if lockfileVersion >= 9.0 {
+	// v9.0 specifies the dependencies as <package>@<version> rather than as a path.
+	// The key's own shape wins over the header, which can disagree with it: a v6
+	// reading of "@scope/name@1.0.0" drops the scope and yields "name".
+	isV6Key := strings.HasPrefix(dependencyPath, "/")
+	if (lockfileVersion >= 9.0 && !isV6Key) || v9KeyRegexp.MatchString(dependencyPath) {
 		dependencyPath = strings.Trim(dependencyPath, "'")
 		dependencyPath, isScoped := strings.CutPrefix(dependencyPath, "@")
 

@@ -1,0 +1,11 @@
+lockfileVersion: '6.0'
+
+packages:
+
+  '@rollup/rollup-linux-riscv64-gnu@4.53.5':
+    resolution: {integrity: sha512-x}
+    cpu: [riscv64]
+    os: [linux]
+
+  acorn@8.7.0:
+    resolution: {integrity: sha512-x}

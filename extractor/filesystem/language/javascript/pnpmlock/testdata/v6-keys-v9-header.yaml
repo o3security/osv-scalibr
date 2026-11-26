@@ -1,0 +1,6 @@
+lockfileVersion: '9.0'
+
+packages:
+
+  /@rollup/rollup-linux-riscv64-gnu@4.53.5:
+    resolution: {integrity: sha512-x}
