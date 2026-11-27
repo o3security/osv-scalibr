@@ -313,6 +313,19 @@ func TestExtractor_Extract(t *testing.T) {
 						DepGroupVals: []string{},
 					},
 				},
+				{
+					Name:     "is-number",
+					Version:  "7.0.0",
+					PURLType: purl.TypeGit,
+					Location: extractor.LocationFromPathAndLine("testdata/v9-keys-v6-header.yaml", 13),
+					SourceCode: &extractor.SourceCodeIdentifier{
+						Commit: "98e8ff1da1a89f93d1397a24d7413ed15421c139",
+						Repo:   "https://github.com/jonschlinkert/is-number",
+					},
+					Metadata: &osv.DepGroupMetadata{
+						DepGroupVals: []string{},
+					},
+				},
 			},
 		},
 		{

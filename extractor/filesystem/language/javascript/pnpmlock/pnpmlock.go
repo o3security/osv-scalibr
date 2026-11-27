@@ -88,8 +88,9 @@ var (
 	// Looks for the pattern "name@version", where name is allowed to contain zero or more "@"
 	nameVersionRegexp   = regexp.MustCompile(`^(.+)@([\w.-]+)(?:\(|$)`)
 	leadingNumberRegexp = regexp.MustCompile(`^\d+(\.\d+)?`)
-	// A v9-style key: "name@version" or "@scope/name@version", with no leading "/"
-	v9KeyRegexp = regexp.MustCompile(`^(@[^/@]+/)?[^/@]+@`)
+	// A v9-style key: "name@1.0.0" or "@scope/name@https://...", with no leading "/";
+	// the version must start with a digit or a scheme so v5 "git@host+org/repo" keys don't match.
+	v9KeyRegexp = regexp.MustCompile(`^(@[^/@]+/)?[^/@]+@(\d|[a-z+]+:)`)
 
 	codeLoadURLRegexp = regexp.MustCompile(`https://codeload\.github\.com(?:/[\w-.]+){2}/tar\.gz/(\w+)$`)
 )
